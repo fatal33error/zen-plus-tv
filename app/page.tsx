@@ -212,7 +212,7 @@ function HeroSection() {
 
           {/* Right: Visual */}
           <div className="relative h-[400px] sm:h-[500px] w-full mt-10 lg:mt-0">
-            <InteractiveVisual />
+            <ZenPlayerVisual />
           </div>
         </div>
       </div>
@@ -220,87 +220,124 @@ function HeroSection() {
   );
 }
 
-function InteractiveVisual() {
+const ZenPlayerVisual = () => {
   return (
-    <div className="relative w-full h-full flex items-center justify-center pointer-events-none">
-      {/* Smart TV Mockup */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+    <div className="relative w-full max-w-4xl mx-auto aspect-video lg:aspect-square flex items-center justify-center">
+      {/* --- Ambient Background Glows --- */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[#00f2fe]/5 rounded-full blur-[100px] -z-10" />
+      <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#4facfe]/10 rounded-full blur-[80px] -z-10 animate-pulse" />
+
+      {/* --- Main Composition Container --- */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.8, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="absolute z-10 w-full max-w-[480px] aspect-video rounded-xl border border-white/10 glass shadow-2xl overflow-hidden shadow-cyan-500/10"
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="relative w-full h-full flex items-center justify-center"
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-900" />
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent" />
-        <div className="absolute bottom-4 left-6 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center">
-            <Play className="w-5 h-5 text-white fill-white ml-0.5" />
+        
+        {/* 1. Main Smart TV Frame */}
+        <div className="relative w-[90%] aspect-video rounded-[2.5rem] border-[10px] border-zinc-800 bg-zinc-950 overflow-hidden shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] z-10">
+          {/* Content Image (Mocking a 4K Movie) */}
+          <img 
+            src="https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?auto=format&fit=crop&q=80&w=1200" 
+            alt="Hero Content" 
+            className="w-full h-full object-cover opacity-60" 
+          />
+          
+          {/* Overlay Gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
+          
+          {/* Player Progress Bar Animation */}
+          <div className="absolute bottom-8 left-8 right-8 space-y-3">
+            <div className="flex items-center justify-between text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
+              <span>01:42:05</span>
+              <span className="text-[#00f2fe]">4K Ultra HD • Live</span>
+            </div>
+            <div className="h-1.5 bg-white/10 w-full rounded-full overflow-hidden">
+              <motion.div 
+                className="h-full bg-gradient-to-r from-[#00f2fe] to-[#4facfe]" 
+                initial={{ width: "0%" }}
+                animate={{ width: "75%" }}
+                transition={{ duration: 4, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+              />
+            </div>
           </div>
-          <div>
-            <div className="text-white font-bold text-sm">LIVE: Champions League Final</div>
-            <div className="text-gray-400 text-xs">Premium Sports HD</div>
+
+          {/* Center Play Button Pulse */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <motion.div 
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="w-20 h-20 rounded-full bg-[#00f2fe]/20 backdrop-blur-md flex items-center justify-center border border-[#00f2fe]/40"
+            >
+              <Play className="w-8 h-8 text-[#00f2fe] fill-current ml-1" />
+            </motion.div>
           </div>
         </div>
-      </motion.div>
 
-      {/* Tablet Mockup */}
-      <motion.div
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-        className="absolute z-20 bottom-0 -right-4 w-[200px] aspect-[3/4] rounded-xl border border-white/10 glass shadow-2xl bg-zinc-900/80 backdrop-blur-xl"
-      >
-        <div className="p-3">
-          <div className="w-full aspect-video rounded-md bg-zinc-800 mb-2 relative overflow-hidden">
-             <div className="absolute inset-0 flex flex-col justify-end p-2 pb-1 bg-gradient-to-t from-black/80">
-                <div className="text-[10px] font-bold text-white">Stranger Things</div>
-             </div>
+        {/* 2. Overlapping Tablet Frame (Floating) */}
+        <motion.div 
+          animate={{ y: [0, -25, 0], rotate: [0, -1, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -bottom-10 -left-10 w-1/2 aspect-[4/3] rounded-3xl border-[8px] border-zinc-900 bg-zinc-950 shadow-2xl hidden md:block overflow-hidden z-20"
+        >
+          <img 
+            src="https://images.unsplash.com/photo-1593784991095-a205039470b6?auto=format&fit=crop&q=80&w=600" 
+            alt="Mobile Interface" 
+            className="w-full h-full object-cover opacity-40" 
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-transparent to-zinc-950/80" />
+        </motion.div>
+
+        {/* 3. Floating Glass UI Cards */}
+        
+        {/* Card A: Live Sports */}
+        <motion.div 
+          animate={{ y: [0, 20, 0], x: [0, 5, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute -top-10 -right-6 glass-effect p-5 rounded-[2rem] shadow-2xl z-30 border border-white/10 bg-white/5 backdrop-blur-2xl"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-[#00f2fe]/20 flex items-center justify-center border border-[#00f2fe]/30">
+              <Activity className="w-6 h-6 text-[#00f2fe]" />
+            </div>
+            <div>
+              <div className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Live Event</div>
+              <div className="text-sm font-extrabold text-white">UCL: Real Madrid vs Man City</div>
+            </div>
+            <div className="px-3 py-1 rounded-lg bg-red-500/20 text-red-500 text-[10px] font-black animate-pulse">
+              LIVE
+            </div>
           </div>
-          <div className="w-full aspect-video rounded-md bg-zinc-800 mb-2" />
-          <div className="w-full aspect-video rounded-md bg-zinc-800" />
-        </div>
-      </motion.div>
+        </motion.div>
 
-      {/* Mobile Mockup */}
-      <motion.div
-        initial={{ opacity: 0, x: -40, y: 30 }}
-        animate={{ opacity: 1, x: 0, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.6 }}
-        className="absolute z-30 bottom-10 left-0 lg:-left-10 w-[120px] aspect-[9/19] rounded-2xl border border-white/10 glass shadow-xl bg-zinc-900/90 backdrop-blur-xl"
-      >
-        <div className="p-2 pt-4">
-           <div className="w-full h-8 rounded shrink-0 bg-[#00f2fe]/20 mb-2 flex items-center px-2">
-              <span className="text-[8px] font-bold text-[#00f2fe] uppercase">Breaking News</span>
-           </div>
-           <div className="space-y-2">
-             {[1,2,3,4].map(i => (
-                <div key={i} className="flex gap-2 items-center">
-                   <div className="w-6 h-6 rounded-full bg-zinc-800" />
-                   <div className="h-2 w-12 bg-zinc-800 rounded-sm" />
-                </div>
-             ))}
-           </div>
-        </div>
-      </motion.div>
+        {/* Card B: New Cinema Release */}
+        <motion.div 
+          animate={{ y: [0, -15, 0], x: [0, -5, 0] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          className="absolute top-1/2 -right-16 glass-effect p-5 rounded-[2rem] shadow-2xl z-25 hidden lg:block border border-white/10 bg-white/5 backdrop-blur-2xl"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-[#4facfe]/20 flex items-center justify-center border border-[#4facfe]/30">
+              <Film className="w-6 h-6 text-[#4facfe]" />
+            </div>
+            <div>
+              <div className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Cinema VOD</div>
+              <div className="text-sm font-extrabold text-white">Gladiator II (2024)</div>
+            </div>
+          </div>
+        </motion.div>
 
-      {/* Floating Cards */}
-      <motion.div
-        animate={{ y: [-10, 10, -10] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -top-6 left-10 z-40 px-4 py-2 rounded-lg glass border-white/10 shadow-lg text-xs font-bold text-white flex items-center gap-2"
-      >
-        <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" /> Live Sports
       </motion.div>
-      <motion.div
-        animate={{ y: [10, -10, 10] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute top-20 -right-8 z-40 px-4 py-2 rounded-lg glass border-white/10 shadow-lg text-xs font-bold text-[#4facfe] flex items-center gap-2"
-      >
-        <Film className="w-3 h-3" /> 4K Movies
-      </motion.div>
+      
+      <style jsx>{`
+        .glass-effect {
+          box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        }
+      `}</style>
     </div>
   );
-}
+};
 
 function FeaturesSection() {
   const features = [
